@@ -6,79 +6,370 @@
   <title>Swain Sailing Delivery Tracker</title>
   <meta name="description" content="The Swain Sailing live delivery tracker is not currently following an active delivery.">
   <style>
-    :root{--navy:#071426;--blue:#0ea5e9;--cyan:#67e8f9;--gold:#fbbf24;--text:#f8fafc;--muted:#cbd5e1;--panel:rgba(15,23,42,.78);--line:rgba(226,232,240,.18)}
-    *{box-sizing:border-box}
-    html,body{min-height:100%;margin:0;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);background:radial-gradient(circle at 20% 20%,rgba(14,165,233,.25),transparent 32rem),radial-gradient(circle at 80% 10%,rgba(103,232,249,.18),transparent 28rem),linear-gradient(135deg,#020617 0%,#071426 45%,#0b2038 100%)}
-    body:before{content:"";position:fixed;inset:0;background:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);background-size:64px 64px;mask-image:linear-gradient(to bottom,rgba(0,0,0,.7),transparent 85%);pointer-events:none}
-    .page{min-height:100vh;display:grid;place-items:center;padding:32px 18px;position:relative}
-    .card{width:min(920px,100%);border:1px solid var(--line);border-radius:30px;background:var(--panel);backdrop-filter:blur(18px);box-shadow:0 30px 90px rgba(0,0,0,.34);overflow:hidden}
-    .hero{display:grid;grid-template-columns:1.08fr .92fr}
-    .content{padding:clamp(28px,5vw,56px)}
-    .brand{display:flex;align-items:center;gap:14px;margin-bottom:34px}
-    .mark{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,var(--blue),var(--cyan));box-shadow:0 16px 32px rgba(14,165,233,.28);font-size:27px}
-    .brand-title{font-weight:950;letter-spacing:.08em;font-size:22px;line-height:1}
-    .brand-sub{color:var(--muted);font-size:12px;letter-spacing:.28em;text-transform:uppercase;margin-top:5px}
-    .status{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(251,191,36,.34);background:rgba(251,191,36,.11);color:#fde68a;border-radius:999px;padding:8px 12px;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;margin-bottom:22px}
-    .status-dot{width:9px;height:9px;border-radius:999px;background:var(--gold);box-shadow:0 0 0 5px rgba(251,191,36,.14)}
-    h1{margin:0;font-size:clamp(38px,7vw,72px);line-height:.96;letter-spacing:-.055em}
-    .lead{color:var(--muted);font-size:clamp(17px,2vw,20px);line-height:1.55;max-width:610px;margin:24px 0 0}
-    .actions{display:flex;flex-wrap:wrap;gap:13px;margin-top:32px}
-    .button{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:48px;padding:13px 18px;border-radius:14px;font-weight:950;text-decoration:none;transition:transform .18s ease,box-shadow .18s ease,background .18s ease}
-    .button.primary{color:#031021;background:linear-gradient(135deg,#67e8f9,#0ea5e9);box-shadow:0 18px 34px rgba(14,165,233,.28)}
-    .button.secondary{color:var(--text);border:1px solid var(--line);background:rgba(255,255,255,.06)}
-    .button:hover{transform:translateY(-2px)}
-    .side{min-height:100%;padding:34px;display:flex;align-items:stretch;background:linear-gradient(180deg,rgba(14,165,233,.1),rgba(255,255,255,.02)),rgba(255,255,255,.04);border-left:1px solid var(--line)}
-    .map-card{width:100%;min-height:390px;border-radius:24px;position:relative;overflow:hidden;border:1px solid rgba(226,232,240,.18);background:radial-gradient(circle at 36% 30%,rgba(103,232,249,.35),transparent 8rem),radial-gradient(circle at 64% 66%,rgba(14,165,233,.28),transparent 10rem),linear-gradient(145deg,#062338,#04111f)}
-    .map-card:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(32deg,transparent 0 28px,rgba(255,255,255,.035) 28px 29px),repeating-linear-gradient(122deg,transparent 0 42px,rgba(255,255,255,.03) 42px 43px);opacity:.8}
-    .route{position:absolute;inset:0;width:100%;height:100%}
-    .route path{fill:none;stroke:rgba(103,232,249,.95);stroke-width:3;stroke-dasharray:9 10;filter:drop-shadow(0 0 10px rgba(103,232,249,.35))}
-    .boat-icon{position:absolute;right:24%;top:37%;width:62px;height:62px;display:grid;place-items:center;border-radius:18px;background:rgba(248,250,252,.96);box-shadow:0 18px 40px rgba(0,0,0,.32);transform:rotate(18deg);font-size:35px}
-    .info{position:absolute;left:22px;right:22px;bottom:22px;border-radius:18px;background:rgba(2,6,23,.76);border:1px solid rgba(226,232,240,.16);padding:16px}
-    .info strong{display:block;font-size:14px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px}
-    .info span{color:var(--muted);font-size:14px;line-height:1.4}
-    .footer{border-top:1px solid var(--line);padding:18px clamp(28px,5vw,56px);color:#94a3b8;font-size:13px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;background:rgba(2,6,23,.24)}
-    .footer a{color:#67e8f9;text-decoration:none;font-weight:800}
-    @media (max-width:820px){.hero{grid-template-columns:1fr}.side{border-left:0;border-top:1px solid var(--line);padding:20px}.map-card{min-height:280px}}
-    @media (max-width:520px){.page{padding:14px}.card{border-radius:22px}.brand{margin-bottom:26px}.actions{flex-direction:column}.button{width:100%}.footer{display:block}.footer div+div{margin-top:8px}}
+    :root {
+      --navy: #031021;
+      --navy-2: #061b31;
+      --blue: #05aef5;
+      --blue-soft: #37c6ff;
+      --pink: #d20a7e;
+      --text: #f8fafc;
+      --muted: #b8c7d9;
+      --line: rgba(148, 163, 184, 0.24);
+      --panel: rgba(3, 16, 33, 0.72);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% 20%, rgba(5, 174, 245, 0.24), transparent 24rem),
+        radial-gradient(circle at 78% 76%, rgba(210, 10, 126, 0.13), transparent 28rem),
+        linear-gradient(135deg, #020b18 0%, #031021 42%, #082747 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        repeating-radial-gradient(
+          ellipse at -8% 18%,
+          rgba(5, 174, 245, 0.28) 0 1px,
+          transparent 1px 12px
+        );
+      opacity: 0.34;
+      transform: rotate(-8deg) scale(1.18);
+      pointer-events: none;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(3, 16, 33, 0.92), rgba(3, 16, 33, 0.36), rgba(3, 16, 33, 0.92)),
+        radial-gradient(circle at center, transparent 0%, rgba(2, 6, 23, 0.56) 78%);
+      pointer-events: none;
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 34px 18px;
+    }
+
+    .shell {
+      width: min(1050px, 100%);
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.025)),
+        var(--panel);
+      backdrop-filter: blur(18px);
+      box-shadow:
+        0 30px 100px rgba(0, 0, 0, 0.38),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      overflow: hidden;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.02fr 0.98fr;
+      min-height: 640px;
+    }
+
+    .left {
+      padding: clamp(30px, 5vw, 62px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .logo-panel {
+      display: grid;
+      place-items: center;
+      padding: clamp(26px, 4vw, 48px);
+      min-height: 100%;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(5, 174, 245, 0.22), transparent 18rem),
+        linear-gradient(145deg, rgba(255,255,255,0.055), rgba(255,255,255,0.012));
+      border-left: 1px solid var(--line);
+      position: relative;
+    }
+
+    .logo-panel::before {
+      content: "";
+      position: absolute;
+      inset: 28px;
+      border: 1px solid rgba(55, 198, 255, 0.12);
+      border-radius: 26px;
+      pointer-events: none;
+    }
+
+    .logo-panel img {
+      width: min(480px, 92%);
+      height: auto;
+      filter:
+        drop-shadow(0 22px 36px rgba(0, 0, 0, 0.38))
+        drop-shadow(0 0 34px rgba(5, 174, 245, 0.18));
+      border-radius: 20px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      width: fit-content;
+      margin-bottom: 24px;
+      padding: 9px 13px;
+      border: 1px solid rgba(210, 10, 126, 0.36);
+      border-radius: 999px;
+      background: rgba(210, 10, 126, 0.12);
+      color: #ffd6ec;
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--pink);
+      box-shadow: 0 0 0 5px rgba(210, 10, 126, 0.16);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 680px;
+      font-size: clamp(42px, 7vw, 78px);
+      line-height: 0.94;
+      letter-spacing: -0.06em;
+      font-weight: 950;
+    }
+
+    h1 span {
+      color: var(--blue-soft);
+    }
+
+    .lead {
+      margin: 26px 0 0;
+      max-width: 620px;
+      color: var(--muted);
+      font-size: clamp(17px, 2vw, 20px);
+      line-height: 1.58;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 34px;
+    }
+
+    .button {
+      min-height: 50px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 13px 19px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-weight: 950;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+
+    .button.primary {
+      color: #031021;
+      background: linear-gradient(135deg, #43d1ff, #05aef5);
+      box-shadow: 0 18px 38px rgba(5, 174, 245, 0.28);
+    }
+
+    .button.secondary {
+      color: var(--text);
+      border: 1px solid rgba(248, 250, 252, 0.18);
+      background: rgba(255, 255, 255, 0.055);
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 42px;
+      max-width: 680px;
+    }
+
+    .summary-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 15px;
+      background: rgba(255, 255, 255, 0.045);
+    }
+
+    .summary-card strong {
+      display: block;
+      color: var(--blue-soft);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 7px;
+    }
+
+    .summary-card span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .footer {
+      padding: 18px clamp(28px, 5vw, 62px);
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      color: #8fa4bc;
+      font-size: 13px;
+      background: rgba(2, 6, 23, 0.24);
+    }
+
+    .footer a {
+      color: var(--blue-soft);
+      text-decoration: none;
+      font-weight: 850;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .logo-panel {
+        border-left: 0;
+        border-top: 1px solid var(--line);
+        min-height: 360px;
+      }
+
+      .summary {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 540px) {
+      .page {
+        padding: 14px;
+      }
+
+      .shell {
+        border-radius: 24px;
+      }
+
+      .left {
+        padding: 28px 22px;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
+      }
+
+      .footer {
+        display: block;
+      }
+
+      .footer div + div {
+        margin-top: 8px;
+      }
+    }
   </style>
 </head>
+
 <body>
   <main class="page">
-    <section class="card">
+    <section class="shell">
+
       <div class="hero">
-        <div class="content">
-          <div class="brand">
-            <div class="mark">⛵</div>
-            <div>
-              <div class="brand-title">SWAIN</div>
-              <div class="brand-sub">Sailing Delivery Tracker</div>
-            </div>
+
+        <div class="left">
+
+          <div class="eyebrow">
+            <span class="dot"></span>
+            No active delivery
           </div>
-          <div class="status"><span class="status-dot"></span>No active delivery</div>
-          <h1>The live tracker is currently ashore.</h1>
-          <p class="lead">We are not following an active Swain Sailing delivery at the moment. When the next passage is underway, this page will return to the live vessel tracker with positions, tracks, and operational updates.</p>
+
+          <h1>
+            The live delivery tracker is currently <span>ashore.</span>
+          </h1>
+
+          <p class="lead">
+            Swain Sailing is not currently following an active yacht delivery.
+            When the next passage is underway, this page will return to the live
+            tracking dashboard with vessel positions, route history, and operational updates.
+          </p>
+
           <div class="actions">
-            <a class="button primary" href="https://www.swainsailing.com/passage-making">Join a future delivery →</a>
-            <a class="button secondary" href="https://www.swainsailing.com">Visit Swain Sailing</a>
+            <a class="button primary" href="https://www.swainsailing.com/live-tracking">
+              Join a Future Delivery →
+            </a>
+
+            <a class="button secondary" href="https://www.swainsailing.com">
+              Visit Swain Sailing
+            </a>
           </div>
-        </div>
-        <aside class="side" aria-label="Decorative passage map">
-          <div class="map-card">
-            <svg class="route" viewBox="0 0 500 500" preserveAspectRatio="none" aria-hidden="true">
-              <path d="M32 416 C 110 360, 128 258, 210 250 S 338 292, 418 188 S 438 96, 478 70" />
-            </svg>
-            <div class="boat-icon">⛵</div>
-            <div class="info">
-              <strong>Next passage pending</strong>
-              <span>Interested in offshore miles, yacht delivery experience, or joining a future Swain Sailing passage? Follow the link for more information.</span>
+
+          <div class="summary">
+            <div class="summary-card">
+              <strong>Offshore miles</strong>
+              <span>Build real passage experience alongside professional instructors and captains.</span>
+            </div>
+
+            <div class="summary-card">
+              <strong>Future passages</strong>
+              <span>Delivery opportunities are announced when vessels are scheduled to move.</span>
+            </div>
+
+            <div class="summary-card">
+              <strong>Live tracking</strong>
+              <span>The tracker returns here automatically when an active delivery begins.</span>
             </div>
           </div>
+
+        </div>
+
+        <aside class="logo-panel" aria-label="Swain Sailing branding">
+          <img src="swain-logo-hero.png" alt="Swain Sailing School and Charters BVI">
         </aside>
+
       </div>
+
       <footer class="footer">
-        <div>Swain Sailing · Offshore delivery tracker</div>
-        <div>Questions? <a href="https://www.swainsailing.com/contact">Contact us</a></div>
+        <div>Swain Sailing · School & Charters BVI</div>
+        <div>
+          Questions?
+          <a href="https://www.swainsailing.com/contact">Contact us</a>
+        </div>
       </footer>
+
     </section>
   </main>
 </body>
